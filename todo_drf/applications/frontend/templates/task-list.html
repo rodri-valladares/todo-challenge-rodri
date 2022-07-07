@@ -25,10 +25,10 @@
 </div>
 
 <div id="new-task-wrapper" class="card-body">
-    <form method="GET" style="display: flex;">
+    <form id="form" style="display: flex;">
         <div id="new-task">
             <div style="flex:6; width:700px">
-                <input type='text' name='title' placeholder="Nueva tarea">
+                <input id="title" type='text' name='title' placeholder="Nueva tarea">
             </div>
             <div style="flex:6">
                 <input class="button" type="submit" value="Submit">
@@ -102,6 +102,7 @@
         console.log("Boton funcionando")
         var url = 'http://127.0.0.1:8000/api/task/create/'
         var title = document.getElementById('title').value
+    
         fetch(url,{
             method: 'POST',
             headers:{
@@ -111,6 +112,7 @@
             body:JSON.stringify({'title':title})
         }).then(function(response){
             buildList()
+            document.getElementById('form').reset()
         })
     })
 
