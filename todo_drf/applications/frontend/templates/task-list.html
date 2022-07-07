@@ -92,7 +92,7 @@
 
                 var title = `<span class="title">${list[i].title}</span>`
                 if (list[i].completed_task == true){
-					title = `<strike class="title">${list[i].title}</strike>`
+					title = `<span class="title" style="text-decoration:line-through;">${list[i].title}</span>`
 				}
                 
                 var item = `
@@ -129,7 +129,7 @@
             for (var i in list){
 					var editBtn = document.getElementsByClassName('edit')[i]
 					var deleteBtn = document.getElementsByClassName('delete')[i]
-					var title = document.getElementsByClassName('title')[i]
+					var title_completed = document.getElementsByClassName('title')[i]
 
 
 					editBtn.addEventListener('click', (function(item){
@@ -149,7 +149,7 @@
 
 
 					
-					title.addEventListener('click', (function(item){
+					title_completed.addEventListener('click', (function(item){
 						return function(){
 							strikeUnstrike(item)
 						}
@@ -219,5 +219,22 @@
 				buildList()
 			})
 	}
+
+    function strikeUnstrike(item){
+			// console.log('completando tarea..')
+
+			item.completed_task = !item.completed_task
+			fetch(`http://127.0.0.1:8000/api/task/update/${item.id}/`, {
+				method:'PUT', 
+				headers:{
+					'Content-type':'application/json',
+					'X-CSRFToken':csrftoken,
+				},
+				body:JSON.stringify({'title':item.title, 'completed_task':item.completed_task})
+			}).then(function(response) {
+				buildList()
+			})
+	}
+
 
 </script>
