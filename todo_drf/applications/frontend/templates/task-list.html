@@ -1,9 +1,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 <div class="header-bar">
     <div>
-        <h1>Hola invera </h1>
-        <!-- <h3 style="margin:0">You have <i>{{count}}</i> incomplete task{{ count|pluralize:"s" }}</h3> -->
-        <h3 style="margin:0">Tareas pendientes: <i>1</i> </h3>
+        <h1>Lista de tareas </h1>
+        
     </div>
 
     
@@ -31,7 +30,7 @@
                 <input id="title" type='text' name='title' placeholder="Nueva tarea">
             </div>
             <div style="flex:6">
-                <input class="button" type="submit" value="Submit">
+                <input id="submit" class="button" type="submit" value="Submit">
             </div>
         </div>
     </form>
@@ -64,76 +63,161 @@
         return cookieValue;
     }
     const csrftoken = getCookie('csrftoken');
-    var taskList = document.getElementById("tasklist");
+    
     
     // var reorderForm = document.getElementById("reorderForm");
     // var positionInput = document.getElementById("positionInput");
+    var activeItem = null
+	var list_snapshot = []
     buildList()
     function buildList(){
-        taskList.innerHTML = ''
+        var taskList = document.getElementById("tasklist");
+        
         var url = 'http://127.0.0.1:8000/api/task/list/'
+        
 
         fetch(url)
         .then((resp) => resp.json())
         .then(function(data){
-            for(var i in data){
+            
+            var list = data
+            
+            for(var i in list){
+                
+                try{
+					document.getElementById(`data-row-${i}`).remove()
+				}catch(err){
 
+				}
+
+                var title = `<span class="title">${list[i].title}</span>`
+                if (list[i].completed_task == true){
+					title = `<strike class="title">${list[i].title}</strike>`
+				}
+                
                 var item = `
                    
-                <div class="task-wrapper" data-position="${data[i].id}">
+                <div id="data-row-${i}" class="task-wrapper" >
                     <div class="task-title">
                         <div class="task-incomplete-icon"></div>
-                        <a href="">${data[i].title}</a> 
+                        <div style="flex:7">
+                            ${title}
+                        </div>
                     </div>
-                    <div class="task-controls">
-                        <a class="delete-link" href="">&#215;</a>
-                        <span class="handle">&nbsp;&#10247;</span>
-                    </div>
+                    <div style="padding-right: 20px; display: flex;">
+                        <div style="flex:1">
+							<button class="button edit">Edit </button>
+						</div>
+						<div style="flex:1">
+							<button class="delete-link delete">&#215</button>
+						</div>
+						
+					</div>
+                    
                 </div>
                 `
                 taskList.innerHTML += item
             }
+            if (list_snapshot.length > list.length){
+				for (var i = list.length; i < list_snapshot.length; i++){
+					document.getElementById(`data-row-${i}`).remove()
+				}
+			}
+
+            list_snapshot = list
+
+            for (var i in list){
+					var editBtn = document.getElementsByClassName('edit')[i]
+					var deleteBtn = document.getElementsByClassName('delete')[i]
+					var title = document.getElementsByClassName('title')[i]
+
+
+					editBtn.addEventListener('click', (function(item){
+						return function(){
+							editItem(item)
+						}
+					})(list[i]))
+
+
+					deleteBtn.addEventListener('click', (function(item){
+                        
+						return function(){
+							deleteItem(item)
+						}
+					})(list[i]))
+
+
+
+					
+					title.addEventListener('click', (function(item){
+						return function(){
+							strikeUnstrike(item)
+						}
+					})(list[i]))
+
+
+			}
         })
     }
 
     var form = document.getElementById("new-task-wrapper");
     form.addEventListener("submit", function(e){
         e.preventDefault();
-        console.log("Boton funcionando")
+        // console.log("Creando, actualizando")
         var url = 'http://127.0.0.1:8000/api/task/create/'
-        var title = document.getElementById('title').value
-    
-        fetch(url,{
-            method: 'POST',
-            headers:{
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            },
-            body:JSON.stringify({'title':title})
-        }).then(function(response){
-            buildList()
-            document.getElementById('form').reset()
-        })
+        if (activeItem != null){
+			var url = `http://127.0.0.1:8000/api/task/update/${activeItem.id}/`
+			var title = document.getElementById('title').value
+            fetch(url,{
+                method: 'PUT',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body:JSON.stringify({'title':title})
+            }).then(function(response){
+                activeItem = null
+                buildList()
+                document.getElementById('form').reset()
+                
+            })
+            activeItem = null   
+		}else{
+            var title = document.getElementById('title').value
+        
+            fetch(url,{
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body:JSON.stringify({'title':title})
+            }).then(function(response){
+                buildList()
+                document.getElementById('form').reset()
+            })       
+        }
+
     })
 
+    function editItem(item){
+		// console.log('editando..', item)
+		activeItem = item
+		document.getElementById('title').value = activeItem.title
+	}
 
-    // let sortable = Sortable.create(taskList, {
-    //     handle: '.handle',
-    //     ghostClass: 'dropArea',
-    //     chosenClass: 'selectedTask',
+    function deleteItem(item){
+			// console.log('Eliminando')
+            var url = `http://127.0.0.1:8000/api/task/delete/${item.id}/`
+			fetch(url, {
+				method:'DELETE', 
+				headers:{
+					'Content-type':'application/json',
+					'X-CSRFToken':csrftoken,
+				}
+			}).then(function(response) {
+				buildList()
+			})
+	}
 
-    // });
-
-    // function reordering() {
-    //     const rows = document.getElementsByClassName("task-wrapper");
-    //     let pos = [];
-    //     for (let row of rows) {
-    //         pos.push(row.dataset.position);
-    //     }
-    //     console.log(pos.join(","))
-    //     positionInput.value = pos.join(',');
-    //     reorderForm.submit();
-    // }
-
-    // document.ondrop = reordering
 </script>
