@@ -14,7 +14,7 @@
 - Ingresar desde cualquier navegador a la ruta local sugerida. Por lo general: http://127.0.0.1:8000/
 
 ## Como usar:
-- El proyecto consiste en una aplicación web sencilla que permita a los usuarios crear y mantener una lista de tareas.
+El proyecto consiste en una aplicación web sencilla que permita a los usuarios crear y mantener una lista de tareas.
 La web permite:
 - Crear una tarea: Ingresar el nombre de la tarea y dar click a "Submit"
 - Eliminar una tarea: Dar click al simbolo "X" correspondiente a la tarea que se quiere borrar
