@@ -1,6 +1,6 @@
 # Invera ToDo-List Challenge (Python/Django Jr-SSr)
 
-:hammer_and_wrench: ## Descarga y puesta a punto del proyecto:
+## :hammer_and_wrench: Descarga y puesta a punto del proyecto:
 
 - Desde la terminal realizar un clone del proyecto( ejecutar un git clone https://github.com/rodri-valladares/todo-challenge-rodri.git )
 - Crear entorno `python -m venv env`
@@ -9,7 +9,7 @@
 - Realizar y ejecutar migraciones(base de datos) : `python [manage.py](http://manage.py) makemigrations` posteriormente ejecutar `python manage.py migrate`
 - Crear superuser : `python [manage.py](http://manage.py) createsuperuser` (se le solicitara elegir un user y un pass)
 
-:rocket: ## Ejecutar aplicación:
+## :rocket: Ejecutar aplicación:
 - Desde la terminal acceder al proyecto descargado, dentro de la carpeta "todo_drf"( \todo-challenge-rodri\todo_drf> ) ejecutar `python manage.py runserver`
 
 ## Como usar:
