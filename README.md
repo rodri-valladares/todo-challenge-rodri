@@ -6,8 +6,8 @@
 - Crear entorno `python -m venv env`
 - Dentro de la carpeta del entorno creado, activar entorno( `.\env\Scripts>activate`)
 - Ya con el entorno activo dirigirse a la carpeta descargada/clonada, acceder a la carpeta todo_drf e instalara los paquetes: `pip install -r requirements.txt`
-- Realizar y ejecutar migraciones(base de datos) : `python [manage.py](http://manage.py) makemigrations` posteriormente ejecutar `python manage.py migrate`
-- Crear superuser : `python [manage.py](http://manage.py) createsuperuser` (se le solicitara elegir un user y un pass)
+- Realizar y ejecutar migraciones(base de datos) : `python manage.py makemigrations` posteriormente ejecutar `python manage.py migrate`
+- Crear superuser : `python manage.py createsuperuser` (se le solicitara elegir un user y un pass)
 
 ## :rocket: Ejecutar aplicación:
 - Desde la terminal acceder al proyecto descargado, dentro de la carpeta "todo_drf"( \todo-challenge-rodri\todo_drf> ) ejecutar `python manage.py runserver`
