@@ -11,6 +11,7 @@
 
 ## :rocket: Ejecutar aplicación:
 - Desde la terminal acceder al proyecto descargado, dentro de la carpeta "todo_drf"( \todo-challenge-rodri\todo_drf> ) ejecutar `python manage.py runserver`
+- Ingresar desde cualquier navegador a la ruta local sugerida. Por lo general: http://127.0.0.1:8000/
 
 ## Como usar:
 - El proyecto consiste en una aplicación web sencilla que permita a los usuarios crear y mantener una lista de tareas.
