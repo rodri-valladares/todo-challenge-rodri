@@ -10,13 +10,13 @@
 
 
 <div id="search-add-wrapper">
-    <form method="GET" style="display: flex;">
+    <form style="display: flex;">
         <div id="new-task">
             <div style="flex:6; width:700px">
-                <input type='text' name='search-area' placeholder="Buscar tarea">
+                <input id="search-area" type='text' name='search-area' placeholder="Buscar tarea">
             </div>
             <div style="flex:6">
-                <input class="button" type="submit" value='Search'>
+                <input id ="search" class="button" type="submit" value='Search'>
             </div>
         </div>
     </form>
@@ -68,12 +68,18 @@
     // var reorderForm = document.getElementById("reorderForm");
     // var positionInput = document.getElementById("positionInput");
     var activeItem = null
+    var search_item = null
 	var list_snapshot = []
     buildList()
     function buildList(){
         var taskList = document.getElementById("tasklist");
         
-        var url = 'http://127.0.0.1:8000/api/task/list/'
+        if((search_item != null) && (search_item != '')){
+            var url = `http://127.0.0.1:8000/api/task/search/${search_item}/`
+            search_item = null
+        }else{
+            var url = 'http://127.0.0.1:8000/api/task/list/'
+        }
         
 
         fetch(url)
@@ -91,7 +97,9 @@
 				}
 
                 var title = `<span class="title">${list[i].title}</span>`
+                var led_completed = `<div class="task-incomplete-icon"></div>`
                 if (list[i].completed_task == true){
+                    led_completed = `<div class="task-complete-icon"></div>`
 					title = `<span class="title" style="text-decoration:line-through;">${list[i].title}</span>`
 				}
                 
@@ -99,7 +107,7 @@
                    
                 <div id="data-row-${i}" class="task-wrapper" >
                     <div class="task-title">
-                        <div class="task-incomplete-icon"></div>
+                        ${led_completed}
                         <div style="flex:7">
                             ${title}
                         </div>
@@ -159,6 +167,16 @@
 			}
         })
     }
+
+    var search_task = document.getElementById("search-add-wrapper");
+    search_task.addEventListener("submit", function(e){
+        e.preventDefault();
+        var wordsearch = document.getElementById('search-area').value
+        search_item = wordsearch
+        console.log(wordsearch);
+        buildList()
+        
+    })
 
     var form = document.getElementById("new-task-wrapper");
     form.addEventListener("submit", function(e){

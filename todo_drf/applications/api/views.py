@@ -38,3 +38,10 @@ class TaskRetrieveUpdateView(RetrieveUpdateAPIView):
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
 
+class TaskSearchApiView(ListAPIView):
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        kword = self.kwargs['kword']
+        return Task.objects.filter(title__contains=kword)
+

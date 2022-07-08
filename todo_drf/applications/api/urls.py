@@ -26,4 +26,8 @@ urlpatterns = [
         'task/update-detail/<pk>/',
         views.TaskRetrieveUpdateView.as_view(),
         ),
+    path(
+        'task/search/<kword>/',
+        views.TaskSearchApiView.as_view(),
+        ),
 ]
